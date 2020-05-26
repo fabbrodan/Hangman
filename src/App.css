@@ -1,12 +1,28 @@
 .App {
   text-align: center;
-  height: 100%;
-  width: auto;
+  height: 100vh;
+  width: 100vh;
+}
+
+#gallowImg {
+  border: white solid 10px;
 }
 
 #main {
-  background: url('./Images/background.png') no-repeat;
-  background-size: contain;
-  height: 1920px;
+  background-image: url('./Assets/Images/background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: relative;
+  height: 100vh;
   width: auto;
+}
+
+#wordLinesText {
+  font-size: 25px;
+  font-weight: bolder;
+}
+
+.center-position {
+  text-align: center;
 }
