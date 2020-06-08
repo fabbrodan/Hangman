@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.css';
 import { Container, Row, Col } from 'react-bootstrap';
 import gallow from './Assets/Images/gallow.png';
@@ -9,8 +9,6 @@ const letters = [
   'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','å','ä','ö'
 ]
 
-let guesses = 0;
-
 const rowPaddingTop = {
   paddingTop: 75
 }
@@ -18,6 +16,37 @@ const rowPaddingTop = {
 let SecretWord = GetRandomWord();
 
 let App = () => {
+
+const [guesses, setCount] = useState(0);
+
+useEffect(() => {
+  document.getElementById("guessText").innerText = "Antal gissningar: " + guesses;
+})
+  
+const wordLines = (word) => {
+  let lines = '';
+  word.split('').map(letter => lines += '_ ');
+  return lines;
+}
+
+const Reset = () => {
+  let buttons = Array.from(document.getElementsByClassName('letter-button'));
+  buttons.forEach(element => {
+    element.disabled = false;
+  });
+  SecretWord = GetRandomWord();
+  setCount(0);
+  document.getElementById("wordLinesText").innerText = wordLines(SecretWord);
+  //document.getElementById("guessText").innerText = "Antal gissningar: " + guesses;
+}
+
+const ButtonPress = event => {
+    let element = event.target;
+    element.disabled = true;
+    setCount(guesses+1);
+    //document.getElementById("guessText").innerText = "Antal gissningar: " + guesses;
+}
+
   return (
     <Container id="main">
       <Row style={rowPaddingTop}>
@@ -56,30 +85,6 @@ let App = () => {
       </Row>
     </Container>
   );
-}
-
-const wordLines = (word) => {
-  let lines = '';
-  word.split('').map(letter => lines += '_ ');
-  return lines;
-}
-
-const Reset = () => {
-  let buttons = Array.from(document.getElementsByClassName('letter-button'));
-  buttons.forEach(element => {
-    element.disabled = false;
-  });
-  SecretWord = GetRandomWord();
-  guesses = 0;
-  document.getElementById("wordLinesText").innerText = wordLines(SecretWord);
-  document.getElementById("guessText").innerText = "Antal gissningar: " + guesses;
-}
-
-const ButtonPress = event => {
-    let element = event.target;
-    element.disabled = true;
-    guesses++;
-    document.getElementById("guessText").innerText = "Antal gissningar: " + guesses;
 }
 
 export default App;
