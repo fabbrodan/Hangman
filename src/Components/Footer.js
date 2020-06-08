@@ -2,10 +2,10 @@ import React from 'react';
 import Container from 'react-bootstrap/Container';
 import './Footer.css';
 
-let Footer = (props) => {
+let Footer = ({Creator}) => {
     return (
         <Container>
-            <footer>{props.Creator}</footer>
+            <footer>{Creator}</footer>
         </Container>
     )
 }
