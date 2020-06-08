@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import './App.css';
 import { Container, Row, Col } from 'react-bootstrap';
-import gallow from './Assets/Images/gallow.png';
+import * as gallows from './Assets/Images/';
 import Keyboard from './Components/Keyboard.js';
 import GetRandomWord from './Assets/words';
 
@@ -13,15 +13,15 @@ const rowPaddingTop = {
   paddingTop: 75
 }
 
-let SecretWord = GetRandomWord();
-
 let App = () => {
 
+const [SecretWord, setSecretWord] = useState(GetRandomWord());
 const [guesses, setCount] = useState(0);
+const [currentImg, setCurrentImg] = useState(gallows.gallow0);
 
 useEffect(() => {
-  document.getElementById("guessText").innerText = "Antal gissningar: " + guesses;
-})
+  setCurrentImg(gallows['gallow' + guesses]);
+}, [guesses]);
   
 const wordLines = (word) => {
   let lines = '';
@@ -34,17 +34,16 @@ const Reset = () => {
   buttons.forEach(element => {
     element.disabled = false;
   });
-  SecretWord = GetRandomWord();
+  setSecretWord(GetRandomWord());
   setCount(0);
+  setCurrentImg(gallows.gallow0);
   document.getElementById("wordLinesText").innerText = wordLines(SecretWord);
-  //document.getElementById("guessText").innerText = "Antal gissningar: " + guesses;
 }
 
 const ButtonPress = event => {
     let element = event.target;
     element.disabled = true;
     setCount(guesses+1);
-    //document.getElementById("guessText").innerText = "Antal gissningar: " + guesses;
 }
 
   return (
@@ -58,13 +57,13 @@ const ButtonPress = event => {
         <Col lg={{offset: 3, span: 7}} sm={{offset: 5, span: 2}} md={{offset: 5, span: 3}}>
           <p>
             Datorn kommer att generera ett slumpmässigt ord som du sedan skall gissa dig fram till.
-            Du har 5 gissningar på dig.
+            Du har 6 gissningar på dig.
           </p>
         </Col>
       </Row>
       <Row>
         <Col className="center-position">
-          <img id="gallowImg" src={gallow} alt="Gallow"/>
+          <img id="gallowImg" src={currentImg} alt="Gallow"/>
         </Col>
       </Row>
       <Row>
