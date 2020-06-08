@@ -29,8 +29,7 @@ const [wordlines, setLines] = useState(wordLines(SecretWord));
 
 useEffect(() => {
   setCurrentImg(gallows['gallow' + guesses]);
-  console.log(wordlines);
-}, [guesses, wordlines]);
+}, [guesses]);
 
 const Reset = () => {
   let buttons = Array.from(document.getElementsByClassName('letter-button'));
