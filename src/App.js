@@ -3,7 +3,7 @@ import './App.css';
 import { Container, Row, Col } from 'react-bootstrap';
 import * as gallows from './Assets/Images/';
 import Keyboard from './Components/Keyboard.js';
-import GetRandomWord from './Assets/words';
+import GetRandomWord from './Util/words';
 
 const letters = [
   'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','å','ä','ö'
@@ -15,35 +15,57 @@ const rowPaddingTop = {
 
 let App = () => {
 
+  const wordLines = (word) => {
+    let lines = '';
+    word.split('').map(letter => lines += '_ ');
+    lines = lines.trimRight();
+    return lines;
+  }
+
 const [SecretWord, setSecretWord] = useState(GetRandomWord());
 const [guesses, setCount] = useState(0);
 const [currentImg, setCurrentImg] = useState(gallows.gallow0);
+const [wordlines, setLines] = useState(wordLines(SecretWord));
 
 useEffect(() => {
   setCurrentImg(gallows['gallow' + guesses]);
-}, [guesses]);
-  
-const wordLines = (word) => {
-  let lines = '';
-  word.split('').map(letter => lines += '_ ');
-  return lines;
-}
+  console.log(wordlines);
+}, [guesses, wordlines]);
 
 const Reset = () => {
   let buttons = Array.from(document.getElementsByClassName('letter-button'));
   buttons.forEach(element => {
     element.disabled = false;
   });
-  setSecretWord(GetRandomWord());
   setCount(0);
   setCurrentImg(gallows.gallow0);
-  document.getElementById("wordLinesText").innerText = wordLines(SecretWord);
+  setSecretWord(GetRandomWord());
+  setLines(wordLines(SecretWord));
+  console.log(SecretWord, wordlines);
 }
 
 const ButtonPress = event => {
     let element = event.target;
     element.disabled = true;
-    setCount(guesses+1);
+    
+    if(!VerifyLetter(element.innerText)) {
+      setCount(guesses+1);
+    }
+}
+
+const VerifyLetter = (letter) => {
+  if (SecretWord.includes(letter)) {
+    var wordlinesArr = wordlines.split(' ');
+    for (var i = 0; i < SecretWord.length; i++) {
+      if (SecretWord[i] === letter) {
+        wordlinesArr[i] = letter;
+        setLines(wordlinesArr.join(' '));
+      }
+    }
+    
+    return true;
+  }
+  return false;
 }
 
   return (
@@ -68,7 +90,7 @@ const ButtonPress = event => {
       </Row>
       <Row>
         <Col>
-          <p className="center-position" id="wordLinesText">{wordLines(SecretWord)}</p>
+          <p className="center-position" id="wordLinesText">{wordlines}</p>
         </Col>
       </Row>
       <Row>
