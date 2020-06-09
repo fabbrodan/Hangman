@@ -4,6 +4,7 @@ import { Container, Row, Col } from 'react-bootstrap';
 import * as gallows from './Assets/Images/';
 import Keyboard from './Components/Keyboard.js';
 import GetRandomWord from './Util/words';
+import WinModal from './Components/WinModal';
 
 const letters = [
   'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','å','ä','ö'
@@ -24,23 +25,38 @@ const wordLinesInit = (word) => {
 
 const [SecretWord, setSecretWord] = useState(GetRandomWord());
 const [guesses, setCount] = useState(0);
+const [internalGuessCount, setInternalGuessCount] = useState(0);
 const [currentImg, setCurrentImg] = useState(gallows.gallow0);
 const [wordlines, setLines] = useState(wordLinesInit(SecretWord));
+const [hasWon, setWin] = useState(false);
+const [hasLost, setLost] = useState(false);
 
 useEffect(() => {
-  setCurrentImg(gallows['gallow' + guesses]);
-  if (guesses === 0) {
-    setLines(wordLinesInit(SecretWord));
+
+  if(!wordlines.includes('_') && internalGuessCount > 0) {
+    setWin(true);
+    console.log(hasWon);
+    }
+
+  if (guesses === 6) {
+    setLost(true);
   }
-}, [guesses, SecretWord]);
+
+  setCurrentImg(gallows['gallow' + guesses]);
+  if (guesses === 0 && internalGuessCount === 0) {
+    setLines(wordLinesInit(SecretWord));
+    setWin(false);
+    setLost(false);
+    }
+}, [guesses, SecretWord, wordlines, internalGuessCount, hasWon, hasLost]);
 
 const Reset = () => {
   let buttons = Array.from(document.getElementsByClassName('letter-button'));
   buttons.forEach(element => {
     element.disabled = false;
   });
-  console.log(SecretWord, 'before useEffect')
   setCount(0);
+  setInternalGuessCount(0);
   setSecretWord(GetRandomWord());
 }
 
@@ -51,6 +67,7 @@ const ButtonPress = event => {
     if(!VerifyLetter(element.innerText)) {
       setCount(guesses => guesses + 1);
     }
+    setInternalGuessCount(internalGuessCount => internalGuessCount + 1);
 }
 
 const VerifyLetter = (letter) => {
@@ -94,7 +111,7 @@ const VerifyLetter = (letter) => {
       </Row>
       <Row>
         <Col>
-          <p id="guessText" className="center-position">Antal gissningar: {guesses}</p>
+          <p id="guessText" className="center-position">Antal gissningar kvar: {6 - guesses}</p>
         </Col>
       </Row>
       <Row>
@@ -103,6 +120,7 @@ const VerifyLetter = (letter) => {
       <Row>
         <Keyboard symbols={["Återställ"]} listener={Reset}/>
       </Row>
+      <WinModal isShowing={hasWon}/>
     </Container>
   );
 }
