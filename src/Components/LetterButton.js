@@ -1,7 +1,7 @@
 import React from 'react';
 import './LetterButton.css';
 
-let LetterButton = (letter, listener) => {
+let LetterButton = ({letter, listener}) => {
     return (
         <button className="letter-button" onClick={listener}>
         {letter}
