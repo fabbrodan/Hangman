@@ -15,32 +15,33 @@ const rowPaddingTop = {
 
 let App = () => {
 
-  const wordLines = (word) => {
-    let lines = '';
-    word.split('').map(letter => lines += '_ ');
-    lines = lines.trimRight();
-    return lines;
-  }
+const wordLinesInit = (word) => {
+  let lines = '';
+  word.split('').map(letter => lines += '_ ');
+  lines = lines.trimRight();
+  return lines;
+}
 
 const [SecretWord, setSecretWord] = useState(GetRandomWord());
 const [guesses, setCount] = useState(0);
 const [currentImg, setCurrentImg] = useState(gallows.gallow0);
-const [wordlines, setLines] = useState(wordLines(SecretWord));
+const [wordlines, setLines] = useState(wordLinesInit(SecretWord));
 
 useEffect(() => {
   setCurrentImg(gallows['gallow' + guesses]);
-}, [guesses]);
+  if (guesses === 0) {
+    setLines(wordLinesInit(SecretWord));
+  }
+}, [guesses, SecretWord]);
 
 const Reset = () => {
   let buttons = Array.from(document.getElementsByClassName('letter-button'));
   buttons.forEach(element => {
     element.disabled = false;
   });
+  console.log(SecretWord, 'before useEffect')
   setCount(0);
-  setCurrentImg(gallows.gallow0);
   setSecretWord(GetRandomWord());
-  setLines(wordLines(SecretWord));
-  console.log(SecretWord, wordlines);
 }
 
 const ButtonPress = event => {
@@ -48,7 +49,7 @@ const ButtonPress = event => {
     element.disabled = true;
     
     if(!VerifyLetter(element.innerText)) {
-      setCount(guesses+1);
+      setCount(guesses => guesses + 1);
     }
 }
 
@@ -61,7 +62,6 @@ const VerifyLetter = (letter) => {
         setLines(wordlinesArr.join(' '));
       }
     }
-    
     return true;
   }
   return false;
