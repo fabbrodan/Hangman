@@ -5,6 +5,7 @@ import * as gallows from './Assets/Images/';
 import Keyboard from './Components/Keyboard.js';
 import GetRandomWord from './Util/words';
 import WinModal from './Components/WinModal';
+import LoseModal from './Components/LoseModal';
 
 const letters = [
   'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','å','ä','ö'
@@ -35,7 +36,6 @@ useEffect(() => {
 
   if(!wordlines.includes('_') && internalGuessCount > 0) {
     setWin(true);
-    console.log(hasWon);
     }
 
   if (guesses === 6) {
@@ -120,7 +120,8 @@ const VerifyLetter = (letter) => {
       <Row>
         <Keyboard symbols={["Återställ"]} listener={Reset}/>
       </Row>
-      <WinModal isShowing={hasWon}/>
+      <WinModal isShowing={hasWon} guesses={internalGuessCount}/>
+      <LoseModal isShowing={hasLost} word={SecretWord}/>
     </Container>
   );
 }

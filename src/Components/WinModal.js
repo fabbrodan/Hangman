@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { Modal } from 'react-bootstrap';
 
-const WinModal = ({isShowing}) => {
+const WinModal = ({isShowing, guesses}) => {
     const [open, setOpen] = useState(isShowing);
 
     const handleClose = () => setOpen(false);
@@ -11,12 +11,14 @@ const WinModal = ({isShowing}) => {
     }, [isShowing]);
 
     return(
-        <Modal show={open} onHide={handleClose}>
+        <Modal show={open} onHide={handleClose}
+        aria-labelledby="contained-modal-title-vcenter"
+        centered>
             <Modal.Header closeButton>
-                Header Text
+                <h3>Grattis!</h3>
             </Modal.Header>
             <Modal.Body>
-                Body text
+                Du gissade rätt ord på {guesses} försök!
             </Modal.Body>
         </Modal>
     )
